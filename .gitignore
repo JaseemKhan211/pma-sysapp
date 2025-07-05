@@ -1,0 +1,16 @@
+# Node.js folders
+/frontend/node_modules
+/backend/node_modules
+
+# Environment files
+/backend/config.env
+/frontend/.env
+
+# Logs and system files
+*.log
+.DS_Store
+.env
+
+# IDE settings (optional)
+.vscode/
+.idea/

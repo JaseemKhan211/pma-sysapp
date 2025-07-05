@@ -1,0 +1,29 @@
+{
+  "name": "pma-system-application-backend",
+  "version": "1.0.0",
+  "description": "Backend service for Privilege Management System Application (PMA), built with Node.js, Express, and Oracle Database.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "oracledb",
+    "backend",
+    "pma"
+  ],
+  "author": "Jaseem Khan",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.0.1",
+    "express": "^5.1.0",
+    "oracledb": "^6.8.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "engines": {
+    "node": "22.x"
+  }
+}
