@@ -11,6 +11,6 @@
 .DS_Store
 .env
 
-# IDE settings (optional)
+# IDE settings 
 .vscode/
 .idea/
