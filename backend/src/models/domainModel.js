@@ -1,3 +1,4 @@
+const oracledb = require('oracledb');
 const { withConnection } = require('../utils/dbHelper');
 
 // CREATE
@@ -27,17 +28,21 @@ exports.createDomain = async (domain) => {
 // UPDATE
 exports.updateDomain = async (domain) => {
   return await withConnection(async (conn) => {
-    await conn.execute(
+    const result = await conn.execute(
       `BEGIN
-        SP_UPDATE_DOMAIN(:p_domainid, :p_domainname, :p_dsc);
+        SP_UPDATE_DOMAIN(:p_domainid, :p_domainname, :p_dsc, :p_rows_updated);
        END;`,
       {
         p_domainid: domain.domainid,
         p_domainname: domain.domainname,
-        p_dsc: domain.dsc
+        p_dsc: domain.dsc,
+        p_rows_updated: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER }
       }
     );
     await conn.commit();
+
+    const rowsUpdated = result.outBinds.p_rows_updated;
+    return rowsUpdated;
   });
 };
 
@@ -80,5 +85,30 @@ exports.getDomain = async (domainid) => {
     await rs.close();
     return rows;
 
+  });
+};
+
+// GET ALL
+exports.getAllDomains = async () => {
+  return await withConnection(async (conn) => {
+    const result = await conn.execute(
+      `BEGIN
+        SP_GET_ALL_DOMAIN(:out_cursor);
+       END;`,
+      {
+        out_cursor: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR }
+      }
+    );
+
+    const rows = [];
+    const rs = result.outBinds.out_cursor;
+
+    let row;
+    while ((row = await rs.getRow())) {
+        rows.push(row);
+    }
+
+    await rs.close();
+    return rows;
   });
 };

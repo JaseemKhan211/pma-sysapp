@@ -1,11 +1,13 @@
 const domainModel = require('../models/domainModel');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
 // Create Domain
-exports.createDomain = async (req, res) => {
-  try {
+exports.createDomain = catchAsync(async (req, res, next) => {
     // Validate request body
     const newDomain = await domainModel.createDomain(req.body);
 
+    // If the domain is created successfully
     res.status(201).json({ 
         status: 'success',
         message: 'Domain created successfully 🎉',
@@ -13,94 +15,88 @@ exports.createDomain = async (req, res) => {
             newDomain 
         }
     });
-  } catch (err) {
-    res.status(500).json({ 
-        status: 'error', 
-        message: err.message 
-    });
-  }
-};
+  });
 
 // Update Domain
-exports.updateDomain = async (req, res) => {
-  try {
-    const updatedDomain = await domainModel.updateDomain(req.body);
+exports.updateDomain = catchAsync(async (req, res, next) => {
+  // Extract domain ID from request parameters
+  // Note: The domain ID should be passed in the request body or as a URL parameter
+  const { domainid } = req.params;
+  const updatedDomain = await domainModel.updateDomain({ ...req.body, domainid });
+
 
     // If no domain is found with the provided ID
-    if (!updatedDomain) {
-      return res.status(404).json({ 
-        status: 'error', 
-        message: 'Domain not found 😢' 
-      });
+    if (!updatedDomain || updatedDomain.length === 0) {
+      return next(new AppError('No domain found with that ID 😢', 404));
     }
+
+    // Fetch the updated domain to return in the response
+    const getDomain = await domainModel.getDomain(domainid);
 
     // If the domain is updated successfully
     res.status(200).json({ 
         status: 'success', 
         message: 'Domain updated successfully 🎉', 
         data: { 
-            updatedDomain 
+            getDomain 
         }
-    });
-  } catch (err) {
-    res.status(500).json({ 
-        status: 'error', 
-        message: err.message 
-    });
-  }
-};
+      });
+  });
 
 // Delete Domain
-exports.deleteDomain = async (req, res) => {
-  try {
-    const { domainid } = req.params;
-    await domainModel.deleteDomain(domainid);
+exports.deleteDomain = catchAsync(async (req, res, next) => {
+  // Extract domain ID from request parameters
+  // Note: The domain ID should be passed as a URL parameter
+  const { domainid } = req.params;
+  await domainModel.deleteDomain(domainid);
 
-    // If no domain is found with the provided ID
-    if (!domainid) {
-      return res.status(404).json({ 
-        status: 'error', 
-        message: 'Domain not found 😢' 
-      });
-    }
-    
-    // if the domain is deleted successfully
-    res.status(200).json({ 
-        status: 'success', 
-        message: 'Domain deleted successfully 🎉' 
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ 
-        status: 'error', 
-        message: err.message 
-    });
+  // If no domain is found with the provided ID
+  if (!domainid) {
+    return next(new AppError('Domain not found 😢', 404));
   }
-};
 
-// Get Domain(s)
-exports.getDomain = async (req, res) => {
-  try {
-    const { domainid } = req.params;
-    const domains = await domainModel.getDomain(domainid);
+    // if the domain is deleted successfully
+  res.status(200).json({ 
+      status: 'success', 
+      message: 'Domain deleted successfully 🎉' 
+    });
+  });
+
+// Get Domain
+exports.getDomain = catchAsync(async (req, res, next) => {
+  // Extract domain ID from request parameters
+  // Note: The domain ID should be passed as a URL parameter
+  const { domainid } = req.params;
+  const domains = await domainModel.getDomain(domainid);
 
     // If no domain is found with the provided ID
-    if (!domains) {
-      return res.status(404).json({ 
-          status: 'error', 
-          message: 'Domain not found 😢' 
-      });
+    if (!domains || domains.length === 0) {
+      return next(new AppError('No domain found with that ID 😢', 404));
     }
-     
-    // If domains are found, return them
+
+  // If the domain is found, return it
     res.status(200).json({ 
         status: 'success', 
         data: domains 
     });
-  } catch (err) {
-    res.status(500).json({ 
-        status: 'error', 
-        message: err.message 
-    });
+  });
+
+// GET ALL Domain
+exports.getAllDomains = catchAsync(async (req, res, next) => {
+  // Fetch all domains from the database
+  // Note: This function should return an array of all domains
+  const domains = await domainModel.getAllDomains();
+
+  // If no domains are found
+  if (!domains || domains.length === 0) {
+    return next(new AppError('No domains found 😢', 404));
   }
-};
+
+  // If domains are found, return them
+  res.status(200).json({ 
+      status: 'success', 
+        message: 'All domains fetched successfully 🎉',
+        length: domains.length,
+        data: domains 
+    });
+  });

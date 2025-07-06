@@ -3,9 +3,13 @@ const domainController = require('../controllers/domainController');
 
 const router = express.Router();
 
-router.post('/', domainController.createDomain);
-router.put('/', domainController.updateDomain);
-router.delete('/:domainid', domainController.deleteDomain);
-router.get('/:domainid', domainController.getDomain);
+router.route('/')
+  .get(domainController.getAllDomains)
+  .post(domainController.createDomain);
+
+router.route('/:domainid')
+  .get(domainController.getDomain)
+  .put(domainController.updateDomain)
+  .delete(domainController.deleteDomain);
 
 module.exports = router;
