@@ -3,6 +3,9 @@ const app = express();
 
 // Importing routes
 const domainRoutes = require('./routes/domainRoutes');
+const userRoutes = require('./routes/userRoutes');
+const totpRoutes = require('./routes/totpRoutes');
+const biosetupRoutes = require('./routes/biosetupRoutes');
 
 // Error handling middleware
 const globalErrorHandler = require('./controllers/errorController');
@@ -13,6 +16,9 @@ app.use(express.json());
 
 // ROUTES
 app.use('/api/v1/domains', domainRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/totps', totpRoutes);
+app.use('/api/v1/biosetups', biosetupRoutes);
 
 // catch unmatched routes
 app.all('/', (req, res, next) => {

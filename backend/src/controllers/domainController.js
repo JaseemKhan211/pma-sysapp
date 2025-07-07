@@ -12,7 +12,7 @@ exports.createDomain = catchAsync(async (req, res, next) => {
         status: 'success',
         message: 'Domain created successfully 🎉',
         data: { 
-            newDomain 
+          newDomain 
         }
     });
   });
@@ -38,7 +38,7 @@ exports.updateDomain = catchAsync(async (req, res, next) => {
         status: 'success', 
         message: 'Domain updated successfully 🎉', 
         data: { 
-            getDomain 
+          getDomain 
         }
       });
   });
@@ -94,7 +94,7 @@ exports.getAllDomains = catchAsync(async (req, res, next) => {
 
   // If domains are found, return them
   res.status(200).json({ 
-      status: 'success', 
+        status: 'success', 
         message: 'All domains fetched successfully 🎉',
         length: domains.length,
         data: domains 
