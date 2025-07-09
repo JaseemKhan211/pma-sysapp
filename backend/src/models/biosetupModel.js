@@ -54,7 +54,7 @@ exports.deletebiosetup = async (biosetupid) => {
         SP_DELETE_BIO_SETUP(:p_bio_setupid);
        END;`,
       {
-        p_bio_setupid: biosetupid.bio_setupid
+        p_bio_setupid: biosetupid
       }
     );
     await conn.commit();
@@ -69,7 +69,7 @@ exports.getbiosetup = async (biosetupid) => {
         SP_GET_BIO_SETUP(:p_bio_setupid, :out_cursor);
        END;`,
       {
-        p_bio_setupid: biosetupid.bio_setupid,
+        p_bio_setupid: biosetupid,
         out_cursor: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR }
       }
     );

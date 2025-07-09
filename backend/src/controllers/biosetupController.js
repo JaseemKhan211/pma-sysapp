@@ -1,19 +1,34 @@
+const fs = require('fs');
 const biosetupModel = require('../models/biosetupModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
 // Create BIO SETUP
 exports.createbiosetup = catchAsync(async (req, res, next) => {
-    // Validate request body
-    const newbiosetup = await biosetupModel.createbiosetup(req.body);
+    // Read binary file data
+    const fileBuffer = req.file ? fs.readFileSync(req.file.path) : null;
 
-    // If the domain is created successfully
+    // Validate presence
+    if (!req.body.bio_setupid || !fileBuffer || !req.body.usrid) {
+
+      // If any of the required fields are missing, return an error response
+      return res.status(400).json({ 
+        status: 'fail', 
+        message: 'All fields required (bio_setupid, file, usrid) 😢' 
+      });
+    }
+
+    // Call model
+    await biosetupModel.createbiosetup({
+      bio_setupid: req.body.bio_setupid,
+      bio_setup_data: fileBuffer,
+      usrid: req.body.usrid
+    });
+
+    // If the bio setup is created successfully
     res.status(201).json({ 
         status: 'success',
-        message: 'Domain created successfully 🎉',
-        data: { 
-            newbiosetup 
-        }
+        message: 'BIO Setup created successfully 🎉'
     });
   });
 
@@ -81,6 +96,7 @@ exports.getbiosetup = catchAsync(async (req, res, next) => {
     });
   });
 
+// Get All BIO SETUP
 exports.getAllbiosetup = catchAsync(async (req, res, next) => {
   // Fetch all bio setup from the database
   // Note: This function should return an array of all bio setup
@@ -95,8 +111,10 @@ exports.getAllbiosetup = catchAsync(async (req, res, next) => {
   res.status(200).json({ 
       status: 'success', 
         message: 'All bio setup fetched successfully 🎉',
-        length: biosetup.length,
-        data: biosetup 
+        results: biosetup.length,
+        data: { 
+          biosetup
+        }
     });
   });
 
