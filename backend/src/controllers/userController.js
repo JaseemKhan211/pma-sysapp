@@ -2,7 +2,7 @@ const userModel = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
-// CREATE
+// CREATE SYUSER
 exports.createUser = catchAsync(async (req, res, next) => {
   // Validate request body
   const newUser = await userModel.createUser(req.body);
@@ -10,13 +10,14 @@ exports.createUser = catchAsync(async (req, res, next) => {
   // If the user is created successfully
   res.status(201).json({
       status: 'success',
+      message: 'User created successfully 🎉',
       data: {
         newUser
       }
     });
   });
 
-// UPDATE
+// UPDATE SYUSER
 exports.updateUser = catchAsync(async (req, res, next) => {
   // Extract user ID from request parameters
   // Note: The user ID should be passed in the request body or as a URL parameter
@@ -36,13 +37,14 @@ exports.updateUser = catchAsync(async (req, res, next) => {
   // If the user is updated successfully
     res.status(200).json({
       status: 'success',
+      message: 'User updated successfully 🎉',
       data: {
         getUser
       }
     });
   });
 
-// DELETE
+// DELETE SYUSER
 exports.deleteUser = catchAsync(async (req, res, next) => {
   // Extract user ID from request parameters
   const { usrid } = req.params;
@@ -60,7 +62,7 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
     });
   });
 
-// GET
+// GET SYUSER
 exports.getUser = catchAsync(async (req, res, next) => {
   // Extract user ID from request parameters
   const { usrid } = req.params;
@@ -80,7 +82,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
     });
   });
 
-// GET ALL
+// GET ALL SYUSER
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   // Fetch all users from the database
   const users = await userModel.getAllUser();

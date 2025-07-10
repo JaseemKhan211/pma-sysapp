@@ -10,7 +10,6 @@ exports.createbiosetup = catchAsync(async (req, res, next) => {
 
     // Validate presence
     if (!req.body.bio_setupid || !fileBuffer || !req.body.usrid) {
-
       // If any of the required fields are missing, return an error response
       return res.status(400).json({ 
         status: 'fail', 
