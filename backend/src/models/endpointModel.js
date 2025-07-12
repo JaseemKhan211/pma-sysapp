@@ -103,7 +103,7 @@ exports.getEndpoint = async (endpointid) => {
 };
 
 // GET ALL 
-exports.getAllEndpoint = async () => {
+exports.getAllEndpoints = async () => {
   return await withConnection(async (conn) => {
     const result = await conn.execute(
       `BEGIN
