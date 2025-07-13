@@ -1,3 +1,4 @@
+const oracledb = require('oracledb');
 const { withConnection } = require('../utils/dbHelper');
 
 // CREATE
@@ -5,11 +6,11 @@ exports.createEndpointAssign = async (endpointAssign) => {
   return await withConnection(async (conn) => {
     await conn.execute(
       `BEGIN
-        SP_INSERT_ENDPOINTASSIGN(:p_endpointid, p_usrid);
+        SP_INSERT_ENDPOINTASSIGN(:p_endpointid, :p_usrid);
        END;`,
       {
         p_endpointid: endpointAssign.endpointid,
-        p_usrid: endpointAssign.p_usrid
+        p_usrid: endpointAssign.usrid
       }
     );
 
@@ -18,7 +19,7 @@ exports.createEndpointAssign = async (endpointAssign) => {
     // ✅ return inserted id
     return {
         p_endpointid: endpointAssign.endpointid,
-        p_usrid: endpointAssign.p_usrid
+        p_usrid: endpointAssign.usrid
     };
   });
 };
