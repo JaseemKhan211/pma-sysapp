@@ -10,6 +10,7 @@ const endpointtypRoutes = require('./routes/endpointtypRoutes');
 const endpointosRoutes = require('./routes/endpointosRoutes');
 const endpointRoutes = require('./routes/endpointRoutes');
 const endpointAssignRoutes = require('./routes/endpointAssignRoutes');
+const recrdsessionRoutes = require('./routes/recrdsessionRoutes');
 
 // Error handling middleware
 const globalErrorHandler = require('./controllers/errorController');
@@ -27,6 +28,7 @@ app.use('/api/v1/endpointtyps', endpointtypRoutes);
 app.use('/api/v1/endpointos', endpointosRoutes);
 app.use('/api/v1/endpoints', endpointRoutes);
 app.use('/api/v1/endpointAssigns', endpointAssignRoutes);
+app.use('/api/v1/recrdsessions', recrdsessionRoutes);
 
 // catch unmatched routes
 app.all('/', (req, res, next) => {
