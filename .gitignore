@@ -4,7 +4,7 @@
 
 # Environment files
 /backend/config.env
-/frontend/.env
+/frontend/config.env
 
 # Logs and system files
 *.log

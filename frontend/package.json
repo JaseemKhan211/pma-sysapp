@@ -1,6 +1,7 @@
 {
-  "name": "frontend",
+  "name": "pma-system-application-frontend",
   "version": "0.1.0",
+  "description": "Frontend service for Privilege Management System Application (PMA), built with React, Next.js, and Tailwind CSS.",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,6 +9,17 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "keywords": [
+    "react",
+    "nextjs",
+    "tailwindcss",
+    "web",
+    "javascript",
+    "frontend",
+    "pma"
+  ],
+  "author": "Jaseem Khan",
+  "license": "ISC",
   "dependencies": {
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -19,5 +31,8 @@
     "eslint": "^9",
     "eslint-config-next": "15.4.2",
     "@eslint/eslintrc": "^3"
+  },
+  "engines": {
+    "node": "22.x"
   }
 }
