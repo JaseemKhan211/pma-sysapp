@@ -1,23 +1,36 @@
 import './globals.css';
+import { ThemeProvider } from 'next-themes';
 import ThemeToggle from '@/components/ThemeToggle';
+import { Inter, Poppins } from 'next/font/google';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  variable: '--font-poppins',
+  weight: ['400', '600'],
+  display: 'swap',
+});
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className="bg-white text-black dark:bg-gray-900 dark:text-white transition-colors">
-        <div className="min-h-screen flex flex-col justify-between">
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+      <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
+        <body className="relative min-h-screen font-sans">
           {/* <Header /> */}
-          <main className="flex-grow">
-            {children}
-          </main>
-
-          <footer className="w-full flex justify-center py-4 bg-transparent">
-            <ThemeToggle />
-          </footer>
-
+          <div className="flex flex-col min-h-screen">
+            <main className="flex-grow">
+              {children}
+            </main>
+          </div>
+          <ThemeToggle />
           {/* <Footer /> */}
-        </div>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ThemeProvider>
   );
 }
