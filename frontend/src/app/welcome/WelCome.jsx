@@ -41,7 +41,7 @@ export default function WelCome() {
           onClick={handleRedirect}
           className="bg-white text-blue-900 dark:bg-gray-100 dark:text-gray-900 font-semibold px-5 py-2 rounded shadow hover:bg-gray-200 dark:hover:bg-white"
         >
-          Verify IP Address
+          Login to Portal
         </button>
     </div>
   );
