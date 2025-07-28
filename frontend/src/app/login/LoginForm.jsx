@@ -1,15 +1,42 @@
 "use client";
-import { useState } from "react";
-import { Fingerprint } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Fingerprint, Copy, RefreshCcw } from "lucide-react";
 import { handleLogin } from "@/handlers/authHandlers";
+import { generateCaptcha } from "@/utils/generateCaptcha";
 
 export default function LoginForm() {
   const [usrid, setUsrid] = useState("");
   const [password, setPassword] = useState("");
+  const [captcha, setCaptcha] = useState("");
+  const [captchaInput, setCaptchaInput] = useState("");
+
+  useEffect(() => {
+    setCaptcha(generateCaptcha());
+  }, []);
+
+  const handleRefreshCaptcha = () => {
+    setCaptcha(generateCaptcha());
+    setCaptchaInput("");
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(captcha);
+    alert("CAPTCHA copied!");
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (captchaInput !== captcha) {
+      alert("Captcha does not match. Please try again.");
+      handleRefreshCaptcha();
+      return;
+    }
+    handleLogin(e, usrid, password);
+  };
 
   return (
     <div className="bg-blue-900 dark:bg-gray-900 min-h-screen flex">
-      {/* LEFT PANEL LOGIN */}
+      {/* LEFT PANEL */}
       <div className="w-4/5 text-white flex flex-col justify-center p-8">
         <h1 className="text-4xl font-bold mb-3">
           Privileged Access Management
@@ -20,14 +47,14 @@ export default function LoginForm() {
         </p>
       </div>
 
-      {/* RIGHT PANEL (LOGIN) */}
+      {/* RIGHT PANEL */}
       <div className="w-3/5 flex items-center justify-center bg-gray-100">
         <div className="p-6 max-w-sm w-full bg-white rounded-xl shadow-md">
-          <form onSubmit={(e) => handleLogin(e, usrid, password)}>
+          <form onSubmit={onSubmit}>
             <input
               type="text"
               placeholder="Username"
-              className="w-full mb-3 p-2 border rounded bg-white text-black dark:bg-white dark:text-black"
+              className="w-full mb-3 p-2 border rounded bg-white text-black"
               value={usrid}
               onChange={(e) => setUsrid(e.target.value)}
               required
@@ -35,11 +62,47 @@ export default function LoginForm() {
             <input
               type="password"
               placeholder="Password"
-              className="w-full mb-3 p-2 border rounded bg-white text-black dark:bg-white dark:text-black"
+              className="w-full mb-3 p-2 border rounded bg-white text-black"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+
+            {/* CAPTCHA */}
+            <div className="mb-3">
+              <div className="flex items-center justify-between">
+                <span className="text-lg font-mono tracking-widest bg-gray-200 px-12 py-1 rounded">
+                  {captcha}
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleRefreshCaptcha}
+                    title="Refresh CAPTCHA"
+                    className="text-blue-800 hover:text-blue-500"
+                  >
+                    <RefreshCcw className="w-5 h-5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={copyToClipboard}
+                    title="Copy CAPTCHA"
+                    className="text-blue-800 hover:text-blue-500"
+                  >
+                    <Copy className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+              <input
+                type="text"
+                placeholder="Enter Captcha"
+                className="w-full mt-2 p-2 border rounded bg-white text-black"
+                value={captchaInput}
+                onChange={(e) => setCaptchaInput(e.target.value)}
+                required
+              />
+            </div>
+
             <div className="flex items-center justify-between">
               <button
                 type="submit"
@@ -47,8 +110,6 @@ export default function LoginForm() {
               >
                 Login
               </button>
-
-              {/* Fingerprint icon button */}
               <button
                 type="button"
                 onClick={() => alert("Fingerprint scan popup here")}
