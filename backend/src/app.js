@@ -13,6 +13,7 @@ const endpointAssignRoutes = require('./routes/endpointAssignRoutes');
 const recrdsessionRoutes = require('./routes/recrdsessionRoutes');
 const uploaderRoutes = require('./routes/uploaderRoutes');
 const adRoutes = require('./routes/adRoutes');
+const ipallowsRoutes = require('./routes/ipallowsRoutes');
 
 // Error handling middleware
 const globalErrorHandler = require('./controllers/errorController');
@@ -33,6 +34,7 @@ app.use('/api/v1/endpointAssigns', endpointAssignRoutes);
 app.use('/api/v1/recrdsessions', recrdsessionRoutes);
 app.use('/api/v1/uploaders', uploaderRoutes);
 app.use('/api/v1/ads', adRoutes);
+app.use('/api/v1/ipallows', ipallowsRoutes);
 
 // catch unmatched routes
 app.all('/', (req, res, next) => {
