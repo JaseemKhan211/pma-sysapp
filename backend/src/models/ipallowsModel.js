@@ -6,7 +6,7 @@ exports.createIPallowed = async (ipallows) => {
   return await withConnection(async (conn) => {
     await conn.execute(
       `BEGIN
-        SP_INSERT_IPALLOWS(:p_ipallows, :p_ipallows_yn, :p_usrid)
+        SP_INSERT_IPALLOWS(:p_ipallows, :p_ipallows_yn, :p_usrid);
        END;`,
       {
         p_ipallows: ipallows.ipallows,
