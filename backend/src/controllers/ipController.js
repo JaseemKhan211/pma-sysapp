@@ -1,18 +1,6 @@
 const oracledb = require('oracledb')
 const { withConnection } = require('../utils/dbHelper')
-const os = require('os');
-
-function getLocalIP() {
-  const interfaces = os.networkInterfaces();
-  for (let name of Object.keys(interfaces)) {
-    for (let iface of interfaces[name]) {
-      if (iface.family === 'IPv4' && !iface.internal) {
-        return iface.address;
-      }
-    }
-  }
-  return '127.0.0.1';
-}
+const { getLocalIP } = require('../utils/getLocalIP')
 
 exports.verifyIP = async (req, res) => {
   try {
@@ -30,7 +18,7 @@ exports.verifyIP = async (req, res) => {
       );
 
       const resultSet = result.outBinds.out_cursor;
-      const rows = await resultSet.getRows(); // fetch all rows
+      const rows = await resultSet.getRows(); 
       await resultSet.close();
 
       return rows;
@@ -38,7 +26,7 @@ exports.verifyIP = async (req, res) => {
 
     // 👇 Check if any row IP matches system IP
     const isAllowed = result.some(row => {
-      const ipInDb = row[7]; // Assuming IP is the 8th column
+      const ipInDb = row[7]; 
       return ipInDb && ipInDb.trim() === clientIp;
     });
 
