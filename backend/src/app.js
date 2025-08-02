@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 
 // Importing routes
 const domainRoutes = require('./routes/domainRoutes');
@@ -23,7 +24,11 @@ const AppError = require('./utils/appError');
 // Middleware to parse JSON requests
 app.use(express.json());
 
-// ROUTES
+// 1) GLOBAL MIDDLEWARES
+// Implement CORS
+app.use(cors());
+
+// 2) ROUTES
 app.use('/api/v1/domains', domainRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/totps', totpRoutes);

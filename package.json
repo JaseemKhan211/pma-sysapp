@@ -1,0 +1,28 @@
+{  
+  "name": "pma-sysapp-monorepo",
+  "version": "1.0.0",
+  "description": "Monorepo for Privilege Management System Application (PMA) including frontend and backend services.",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "start": "concurrently \"npm start --prefix backend\" \"npm start --prefix frontend\""
+  },
+  "keywords": [
+    "monorepo",
+    "pma",
+    "frontend",
+    "backend"
+  ],
+  "author": "Jaseem Khan",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

@@ -1,15 +1,10 @@
 "use client";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
+import { useHandleRedirect } from "@/handlers/ipHandler"; 
 
 export default function WelCome() {
-  const { theme } = useTheme();
-  const router = useRouter();
-
-  const handleRedirect = () => {
-    router.push('/login');
-  };
+  // Initialize the redirect handler
+  const handleRedirect = useHandleRedirect();
 
   return (
     <div className="bg-blue-900 dark:bg-gray-900 min-h-screen flex flex-col items-center justify-center text-white  p-7">
