@@ -7,12 +7,17 @@ export const useHandleRedirect = () => {
 
   const handleRedirect = async () => {
     const allowed = await verifyIp();
-    console.log("IP Allowed? =>", allowed); // ✅ Confirm result
+
+    // ERROR FIND LOG 💥
+    // console.log("IP Allowed? =>", allowed); 
 
     if (allowed) {
       router.push("/login");
     } else {
-      console.log("Showing Alert"); // ✅ Debug log
+      // ERROR FIND LOG 💥
+      // console.log("Showing Alert"); 
+
+      // Show alert if IP is not allowed
       showAlert(
         "Access Denied",
         "Your IP is not allowed to access this portal. Please contact your administrator.",

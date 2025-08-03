@@ -5,7 +5,9 @@ const { getLocalIP } = require('../utils/getLocalIP')
 exports.verifyIP = async (req, res) => {
   try {
     const clientIp = getLocalIP();
-    console.log('🔍 System IP:', clientIp);
+
+    // ERROR FIND LOG 💥
+    // console.log('🔍 System IP:', clientIp);
 
     const result = await withConnection(async (conn) => {
       const binds = {
@@ -30,11 +32,15 @@ exports.verifyIP = async (req, res) => {
       return ipInDb && ipInDb.trim() === clientIp;
     });
 
-    console.log('✅ Match Found:', isAllowed);
+    // ERROR FIND LOG 💥
+    // console.log('✅ Match Found:', isAllowed);
+
     res.json({ allowed: isAllowed });
 
   } catch (err) {
-    console.error('❌ IP check error:', err);
+    // ERROR FIND LOG 💥
+    // console.error('❌ IP check error:', err);
+    
     res.status(500).json({
       allowed: false,
       error: 'Internal Server Error'
