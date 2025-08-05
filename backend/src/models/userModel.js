@@ -136,3 +136,29 @@ exports.getAllUser = async () => {
     return rows;
   });
 };
+
+// GET USER LOGIN
+exports.getUserLogin = async (usrid) => {
+  return await withConnection(async (conn) => {
+    const result = await conn.execute(
+      `BEGIN
+        SP_GET_SYUSR_LOGIN(:p_usrid, :out_cursor);
+       END;`,
+      {
+        p_usrid: usrid,
+        out_cursor: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR }
+      }
+    );
+
+    const rows = [];
+    const rs = result.outBinds.out_cursor;
+
+    let row;
+    while ((row = await rs.getRow())) {
+        rows.push(row);
+    }
+
+    await rs.close();
+    return rows;
+  });
+};
