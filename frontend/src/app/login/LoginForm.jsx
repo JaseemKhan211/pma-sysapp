@@ -1,12 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Fingerprint, Copy, RefreshCcw } from "lucide-react";
-import { handleLogin } from "@/handlers/authHandlers";
+import { useLoginHandler } from '@/handlers/authHandler';
 import { generateCaptcha } from "@/utils/generateCaptcha";
 
 export default function LoginForm() {
-  const [usrid, setUsrid] = useState("");
-  const [password, setPassword] = useState("");
+  const handleLogin = useLoginHandler();
+  const [usrid, setUsrid] = useState('');
+  const [pw, setPw] = useState('');
   const [captcha, setCaptcha] = useState("");
   const [captchaInput, setCaptchaInput] = useState("");
 
@@ -24,14 +25,9 @@ export default function LoginForm() {
     alert("CAPTCHA copied!");
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    if (captchaInput !== captcha) {
-      alert("Captcha does not match. Please try again.");
-      handleRefreshCaptcha();
-      return;
-    }
-    handleLogin(e, usrid, password);
+    await handleLogin({ usrid, pw });
   };
 
   return (
@@ -63,8 +59,8 @@ export default function LoginForm() {
               type="password"
               placeholder="Password"
               className="w-full mb-3 p-2 border rounded bg-white text-black"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={pw}
+              onChange={(e) => setPw(e.target.value)}
               required
             />
 

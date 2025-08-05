@@ -7,4 +7,4 @@ export async function verifyIp() {
     const data = await res.json();
     return data.allowed;
   })();
-}
+};
