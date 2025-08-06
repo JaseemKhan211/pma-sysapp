@@ -12,7 +12,7 @@ export const useLoginHandler = () => {
       if (data?.status === 'success') {
         showsAlert(
           'success',
-          'Login successful! Redirecting...'
+          'Logged in successfully.'
         );
         setTimeout(() => {
           router.push('/home'); 

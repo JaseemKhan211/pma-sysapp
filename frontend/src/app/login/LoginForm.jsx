@@ -7,7 +7,9 @@ import { generateCaptcha } from "@/utils/generateCaptcha";
 export default function LoginForm() {
   const handleLogin = useLoginHandler();
   const [usrid, setUsrid] = useState('');
+  console.log("User ID:", usrid);
   const [pw, setPw] = useState('');
+  console.log("Password:", pw);
   const [captcha, setCaptcha] = useState("");
   const [captchaInput, setCaptchaInput] = useState("");
 
@@ -28,6 +30,7 @@ export default function LoginForm() {
   const onSubmit = async (e) => {
     e.preventDefault();
     await handleLogin({ usrid, pw });
+    console.log("Login submitted with User ID:", usrid, "and Password:", pw);
   };
 
   return (
@@ -65,7 +68,7 @@ export default function LoginForm() {
             />
 
             {/* CAPTCHA */}
-            <div className="mb-3">
+            {/*<div className="mb-3">
               <div className="flex items-center justify-between">
                 <span className="text-lg font-mono tracking-widest bg-gray-200 px-12 py-1 rounded">
                   {captcha}
@@ -97,7 +100,7 @@ export default function LoginForm() {
                 onChange={(e) => setCaptchaInput(e.target.value)}
                 required
               />
-            </div>
+            </div>*/}
 
             <div className="flex items-center justify-between">
               <button

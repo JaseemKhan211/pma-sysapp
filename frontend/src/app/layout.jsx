@@ -2,6 +2,7 @@ import './globals.css';
 import { ThemeProvider } from 'next-themes';
 import ThemeToggle from '@/components/ThemeToggle';
 import { Inter, Poppins } from 'next/font/google';
+import '../styles/style.css';
 
 const inter = Inter({
   subsets: ['latin'],
