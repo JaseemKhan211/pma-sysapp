@@ -16,6 +16,7 @@ const uploaderRoutes = require('./routes/uploaderRoutes');
 const adRoutes = require('./routes/adRoutes');
 const ipallowsRoutes = require('./routes/ipallowsRoutes');
 const ipRoutes = require('./routes/ipRoutes');
+const accessRoutes = require('./routes/accessRoutes');
 
 // Error handling middleware
 const globalErrorHandler = require('./controllers/errorController');
@@ -42,6 +43,7 @@ app.use('/api/v1/uploaders', uploaderRoutes);
 app.use('/api/v1/ads', adRoutes);
 app.use('/api/v1/ipallows', ipallowsRoutes);
 app.use('/api/v1/ips', ipRoutes);
+app.use('/api/v1/access', accessRoutes);
 
 // catch unmatched routes
 app.all('/', (req, res, next) => {
