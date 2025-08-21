@@ -11,6 +11,9 @@ backend/node_modules/
 /backend/config.env
 /frontend/.env.local
 
+# Ignore MySQL data directory
+guacamole-docker/mysql/
+
 # Logs and system files
 *.log
 .DS_Store
