@@ -22,14 +22,12 @@ export default function RootLayout({ children }) {
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
       <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
         <body className="relative min-h-screen font-sans">
-          {/* <Header /> */}
           <div className="flex flex-col min-h-screen">
             <main className="flex-grow">
               {children}
             </main>
           </div>
           <ThemeToggle />
-          {/* <Footer /> */}
         </body>
       </html>
     </ThemeProvider>

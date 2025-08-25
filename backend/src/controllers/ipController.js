@@ -7,7 +7,7 @@ exports.verifyIP = async (req, res) => {
     const clientIp = getLocalIP();
 
     // ERROR FIND LOG 💥
-    // console.log('🔍 System IP:', clientIp);
+    console.log('🔍 System IP:', clientIp);
 
     const result = await withConnection(async (conn) => {
       const binds = {
@@ -33,13 +33,13 @@ exports.verifyIP = async (req, res) => {
     });
 
     // ERROR FIND LOG 💥
-    // console.log('✅ Match Found:', isAllowed);
+    console.log('✅ Match Found:', isAllowed);
 
     res.json({ allowed: isAllowed });
 
   } catch (err) {
     // ERROR FIND LOG 💥
-    // console.error('❌ IP check error:', err);
+    console.error('❌ IP check error:', err);
     
     res.status(500).json({
       allowed: false,

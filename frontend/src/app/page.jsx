@@ -7,11 +7,3 @@ export const metadata = {
 export default function Home() {
   return <WelCome />;
 }
-
-
-// OLD CODE :EMOJI BAD
-// import { redirect } from 'next/navigation';
-
-// export default function Home() {
-//   redirect('/login');
-// }
