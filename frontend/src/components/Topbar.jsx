@@ -5,11 +5,10 @@ export default function Topbar({ onToggleSidebar }) {
   return (
     <header className="h-16 bg-white shadow flex items-center justify-between px-6 border-b">
       <div className="flex items-center gap-4">
-        {/* Toggle Sidebar Button */}
+        {/* Sidebar Toggle Button */}
         <button onClick={onToggleSidebar} className="p-2 hover:bg-gray-200 rounded">
           <Menu size={20} />
         </button>
-
         <h1 className="text-lg font-semibold">Dashboard</h1>
       </div>
 
