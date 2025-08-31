@@ -1,12 +1,12 @@
 "use client";
-import { Calendar, FileText, LayoutDashboard, File } from "lucide-react";
+import { FileText, LayoutDashboard, File, Plug } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Sidebar({ collapsed }) {
   const menus = [
     { name: "Dashboard", icon: <LayoutDashboard size={20} />, href: "/dashboard" },
-    { name: "Calendar", icon: <Calendar size={20} />, href: "/calendar" },
+    { name: "Connection", icon: <Plug size={20} />, href: "/dashboard/connection" },
     { name: "Invoice", icon: <FileText size={20} />, href: "/invoice" },
     { name: "Pages", icon: <File size={20} />, href: "/pages" },
   ];
