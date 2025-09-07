@@ -12,6 +12,7 @@ router.route('/')
   .get(userController.getAllUsers)
   .post(userController.createUser);
 
+// Routes for specific user identified by usrid
 router.route('/:usrid')
   .get(userController.getUser)
   .put(userController.updateUser)

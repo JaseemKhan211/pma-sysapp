@@ -3,14 +3,16 @@ const systemController = require('../controllers/systemController');
 
 const router = express.Router();
 
-router.get(
-    '/', 
-    systemController.listSystems
-);
+// Routes for system management
+router.route('/')
+  .get(systemController.getAllSystems)
+  .post(systemController.createSystem);
 
-router.get(
-    '/:connectionId/access', 
-    systemController.accessSystem
-);
+// Routes for specific system identified by systemid
+router.route('/:systemid')
+  .get(systemController.getSystem)
+  .put(systemController.updateSystem)
+  .delete(systemController.deleteSystem);
 
 module.exports = router;
+ 

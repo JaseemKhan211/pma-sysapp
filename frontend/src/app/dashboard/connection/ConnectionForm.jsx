@@ -32,10 +32,10 @@ export default function ConnectionForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-md shadow-md">
-      <h2 className="text-xl font-semibold">Connection Form</h2>
+      <h2 className="text-xl font-semibold">Endpoint Form</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <InputField label="Name" name="name" placeholder='Connection Name' value={formData.name} onChange={handleChange} />
+        <InputField label="Name" name="name" placeholder='Endpoint Name' value={formData.name} onChange={handleChange} />
         <InputField label="Location" name="location" placeholder='Location' value={formData.location} onChange={handleChange} />
         <div>
           <label className="text-sm font-medium">Protocol</label>

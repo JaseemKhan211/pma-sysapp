@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function Sidebar({ collapsed }) {
   const menus = [
     { name: "Dashboard", icon: <LayoutDashboard size={20} />, href: "/dashboard" },
-    { name: "Connection", icon: <Plug size={20} />, href: "/dashboard/connection" },
+    { name: "Endpoint", icon: <Plug size={20} />, href: "/dashboard/connection" },
     { name: "Invoice", icon: <FileText size={20} />, href: "/invoice" },
     { name: "Pages", icon: <File size={20} />, href: "/pages" },
   ];

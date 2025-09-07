@@ -1,7 +1,7 @@
 import ConnectionReport from "./ConnectionReport";
 
 export const metadata = {
-  title: "PAM | Connection",
+  title: "PAM | Endpoint",
 };
 
 export default function ConnectionPage() {
