@@ -1,100 +1,185 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import {
+  useCreateSystemHandler,
+  useUpdateSystemHandler,
+  useGetSystemHandler,
+} from "@/handlers/systemHandler";
 import InputField from "@/components/InputField";
 
 export default function ConnectionForm() {
-  const [formData, setFormData] = useState({
-    name: "",
-    location: "ROOT",
-    protocol: "RDP",
-    hostname: "",
-    port: "3389",
-    timeout: "",
-    username: "",
-    password: "",
-    domain: "",
-    securityMode: "Any",
-    ignoreCert: true
-  });
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const editSystemId = searchParams.get("systemid");
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
+  const { handleCreateSystem } = useCreateSystemHandler();
+  const { handleUpdateSystem } = useUpdateSystemHandler();
+  const { handleGetSystem } = useGetSystemHandler();
 
-  const handleSubmit = (e) => {
+  const [systemid, setSystemid] = useState("");
+  const [hostname, setHostname] = useState("");
+  const [ip_address, setIpAddress] = useState("");
+  const [loc, setLoc] = useState("");
+  const [protocol, setProtocol] = useState("RDP");
+  const [port, setPort] = useState("3389");
+  const [tmeout, setTmeout] = useState("30");
+  const [username, setUsername] = useState("");
+  const [pw, setPassword] = useState("");
+  const [domainid, setDomain] = useState("");
+
+  useEffect(() => {
+    const fetchSystem = async () => {
+      if (editSystemId) {
+        const result = await handleGetSystem(editSystemId);
+
+        if (result?.data?.system) {
+          const sys = Array.isArray(result.data.system[0])
+            ? result.data.system[0]
+            : result.data.system;
+
+          // Only set state if not already set (to avoid overwriting user input)
+          setSystemid((prev) => prev || sys[7] || "");
+          setHostname((prev) => prev || sys[1] || "");
+          setIpAddress((prev) => prev || sys[2] || "");
+          setLoc((prev) => prev || sys[8] || "");
+          setProtocol((prev) => prev || sys[9] || "RDP");
+          setPort((prev) => prev || sys[10] || "3389");
+          setTmeout((prev) => prev || sys[11] || "30");
+          setUsername((prev) => prev || sys[12] || "");
+          setPassword((prev) => prev || sys[13] || "");
+          setDomain((prev) => prev || sys[14] || "");
+        }
+      }
+    };
+    fetchSystem();
+  }, [editSystemId]); // Only run when editSystemId changes
+
+  const onSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitted:", formData);
+
+    const payload = {
+      systemid,
+      hostname,
+      ip_address,
+      loc,
+      protocol,
+      port,
+      tmeout,
+      username,
+      pw,
+      domainid,
+    };
+
+    if (editSystemId) {
+      await handleUpdateSystem(payload);
+    } else {
+      await handleCreateSystem(payload);
+    }
+
+    router.push("/dashboard/connection");
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-md shadow-md">
-      <h2 className="text-xl font-semibold">Endpoint Form</h2>
+    <form
+      onSubmit={onSubmit}
+      className="space-y-6 bg-white p-6 rounded-md shadow-md"
+    >
+      <h2 className="text-xl font-semibold">
+        {editSystemId ? "Edit Endpoint" : "Add Endpoint"}
+      </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <InputField label="Name" name="name" placeholder='Endpoint Name' value={formData.name} onChange={handleChange} />
-        <InputField label="Location" name="location" placeholder='Location' value={formData.location} onChange={handleChange} />
+        <InputField
+          label="Name"
+          name="systemid"
+          placeholder="Endpoint Name"
+          value={systemid}
+          onChange={(e) => setSystemid(e.target.value)}
+          required
+          disabled={!!editSystemId} 
+        />
+        <InputField
+          label="Location"
+          name="loc"
+          placeholder="Location"
+          value={loc}
+          onChange={(e) => setLoc(e.target.value)}
+        />
         <div>
           <label className="text-sm font-medium">Protocol</label>
           <select
             name="protocol"
-            value={formData.protocol}
-            onChange={handleChange}
+            value={protocol}
+            onChange={(e) => setProtocol(e.target.value)}
             className="w-full px-3 py-2 border rounded-md border-gray-300"
           >
-            <option>RDP</option>
-            <option>SSH</option>
-            <option>VNC</option>
+            <option value="RDP">RDP</option>
+            <option value="SSH">SSH</option>
+            <option value="VNC">VNC</option>
           </select>
         </div>
       </div>
 
-      {/* <h2 className="text-xl font-semibold">Parameters</h2> */}
-
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <InputField label="Hostname" name="hostname" placeholder='Host Name' value={formData.hostname} onChange={handleChange} />
-        <InputField label="Port" name="port" placeholder='Port' value={formData.port} onChange={handleChange} />
-        <InputField label="Connection Timeout" name="timeout" placeholder='Session Time Out' value={formData.timeout} onChange={handleChange} />
-        <InputField label="Username" name="username" placeholder='System User Name' value={formData.username} onChange={handleChange} />
-        <InputField label="Password" type="password" name="password" placeholder='System Password' value={formData.password} onChange={handleChange} />
-        <InputField label="Domain" name="domain" placeholder='System Domain' value={formData.domain} onChange={handleChange} />
-        <div>
-          <label className="text-sm font-medium">Security Mode</label>
-          <select
-            name="securityMode"
-            value={formData.securityMode}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md border-gray-300"
-          >
-            <option>Any</option>
-            <option>NLA</option>
-            <option>RDP</option>
-            <option>TLS</option>
-          </select>
-        </div>
-        {/* <div className="flex items-center gap-2 mt-6">
-          <input type="checkbox" name="disableAuth" checked={formData.disableAuth} onChange={handleChange} />
-          <label>Disable authentication</label>
-        </div> */}
-        {/* <div className="flex items-center gap-2 mt-6">
-          <input type="checkbox" name="ignoreCert" checked={formData.ignoreCert} onChange={handleChange} />
-          <label>Ignore server certificate</label>
-        </div> */}
-        {/* <div className="flex items-center gap-2 mt-6">
-          <input type="checkbox" name="trustCertOnFirstUse" checked={formData.trustCertOnFirstUse} onChange={handleChange} />
-          <label>Trust cert on first use</label>
-        </div> */}
-        {/* <InputField label="Trusted Fingerprints" name="fingerprints" value={formData.fingerprints} onChange={handleChange} /> */}
+        <InputField
+          label="Hostname"
+          name="hostname"
+          placeholder="Host Name"
+          value={hostname}
+          onChange={(e) => setHostname(e.target.value)}
+        />
+        <InputField
+          label="IP Address"
+          name="ip_address"
+          placeholder="e.g. 192.168.1.10"
+          value={ip_address}
+          onChange={(e) => setIpAddress(e.target.value)}
+          required
+        />
+        <InputField
+          label="Port"
+          name="port"
+          placeholder="Port"
+          value={port}
+          onChange={(e) => setPort(e.target.value)}
+        />
+        <InputField
+          label="Connection Timeout"
+          name="tmeout"
+          placeholder="Seconds"
+          value={tmeout}
+          onChange={(e) => setTmeout(e.target.value)}
+        />
+        <InputField
+          label="Username"
+          name="username"
+          placeholder="System User Name"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <InputField
+          label="Password"
+          type="password"
+          name="pw"
+          placeholder="System Password"
+          value={pw}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <InputField
+          label="Domain"
+          name="domainid"
+          placeholder="System Domain"
+          value={domainid}
+          onChange={(e) => setDomain(e.target.value)}
+        />
       </div>
 
       <button
         type="submit"
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        className="text-white px-4 py-2 rounded bg-blue-900 dark:bg-gray-900 hover:bg-blue-600 dark:hover:bg-gray-700"
       >
-        Save
+        {editSystemId ? "Update" : "Create"}
       </button>
     </form>
   );

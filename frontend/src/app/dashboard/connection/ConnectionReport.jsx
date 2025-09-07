@@ -1,11 +1,45 @@
 "use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import ConnectionHeader from "./ConnectionHeader";
+import {
+  useGetAllSystemsHandler,
+  useDeleteSystemHandler,
+  useGetSystemHandler,
+} from "@/handlers/systemHandler";
+
+import { Pencil, Trash2 } from "lucide-react";
 
 export default function ConnectionReport() {
-  const connections = [
-    { name: "192.168.0.39", icon: "🖥️" },
-    { name: "192.168.0.40", icon: "🖥️" },
-  ];
+  const { handleGetAllSystems } = useGetAllSystemsHandler();
+  const { handleDeleteSystem } = useDeleteSystemHandler();
+  const { handleGetSystem } = useGetSystemHandler();
+  const [connections, setConnections] = useState([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchSystems = async () => {
+      const result = await handleGetAllSystems();
+
+      const systems = (result?.data?.systems || []).map((item) => ({
+        systemid: item[7], 
+        protocol: item[9],
+      }));
+
+      setConnections(systems);
+    };
+    fetchSystems();
+  }, []);
+
+  const handleEdit = async (systemid) => {
+    await handleGetSystem(systemid);
+    router.push(`/dashboard/connection/form?systemid=${systemid}`); 
+  };
+
+  const handleDelete = async (systemid) => {
+    await handleDeleteSystem(systemid);
+    setConnections((prev) => prev.filter((c) => c.systemid !== systemid));
+  };
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -15,10 +49,30 @@ export default function ConnectionReport() {
         {connections.map((conn, i) => (
           <div
             key={i}
-            className="flex items-center space-x-2 bg-white p-3 rounded-md border hover:shadow-md cursor-pointer"
+            className="flex items-center justify-between bg-white p-3 rounded-md border hover:shadow-md"
           >
-            <span>{conn.icon}</span>
-            <span>{conn.name}</span>
+            {/* Left side */}
+            <div className="flex items-center space-x-4">
+              <span>🖥️</span>
+              <span className="font-medium">{conn.systemid}</span>
+              <span className="text-gray-500">{conn.protocol}</span>
+            </div>
+
+            {/* Right side actions */}
+            <div className="flex space-x-3">
+              <button
+                onClick={() => handleEdit(conn.systemid)}
+                className="p-2 rounded-full hover:bg-blue-100 text-blue-600"
+              >
+                <Pencil size={18} />
+              </button>
+              <button
+                onClick={() => handleDelete(conn.systemid)}
+                className="p-2 rounded-full hover:bg-red-100 text-red-600"
+              >
+                <Trash2 size={18} />
+              </button>
+            </div>
           </div>
         ))}
       </div>
