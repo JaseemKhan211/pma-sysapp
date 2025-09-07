@@ -1,26 +1,31 @@
 import { useRouter } from 'next/navigation';
 import { createSystem, updateSystem, deleteSystem, getSystem, getAllSystems } from '@/services/system';
-import { showsAlert } from '@/utils/alert';
+import { 
+  showCreateSuccess,
+  confirmCreate, 
+  showUpdateSuccess, 
+  confirmUpdate, 
+  showDeleteSuccess, 
+  confirmDelete, 
+  showsAlert 
+} from '@/utils/alert';
 
 // CREATE SYSTEM
 export const useCreateSystemHandler = () => {
   const router = useRouter();
 
   const handleCreateSystem = async (systemData) => {
-    const result = await createSystem(systemData);
-    if (result) {
-      showsAlert(
-        'success',
-        'System created successfully'
-      );
-      setTimeout(() => {
-        router.push('/dashboard/connection');
-      }, 2000);
-    } else {
-      showsAlert(
-        'error',
-        'Failed to create system'
-      );
+    const result = await confirmCreate();
+
+    if (result.isConfirmed) {
+      const response = await createSystem(systemData);
+
+      if (response) {
+        await showCreateSuccess();
+        router.push("/dashboard/connection");
+      } else {
+        await showAlert("error", "Error!", "Failed to create system");
+      }
     }
   };
 
@@ -30,20 +35,28 @@ export const useCreateSystemHandler = () => {
 // UPDATE SYSTEM
 export const useUpdateSystemHandler = () => {
   const router = useRouter();
+
   const handleUpdateSystem = async (systemData) => {
-    const result = await updateSystem(systemData);
-    if (result) {
-      showsAlert(
-        'success',
-        'System updated successfully'
-      );
-      setTimeout(() => {
-        router.push('/dashboard/connection');
-      }, 2500);
-    } else {
-      showsAlert(
-        'error',
-        'Failed to update system'
+    const result = await confirmUpdate();
+
+    if (result.isConfirmed) {
+      const response = await updateSystem(systemData);
+
+      if (response) {
+        await showUpdateSuccess();
+        router.push("/dashboard/connection");
+      } else {
+        await showAlert(
+          "error", 
+          "Error!", 
+          "Failed to update system"
+        );
+      }
+    } else if (result.isDenied) {
+      await showAlert(
+        "info", 
+        "Changes not saved", 
+        ""
       );
     }
   };
@@ -54,21 +67,19 @@ export const useUpdateSystemHandler = () => {
 // DELETE SYSTEM
 export const useDeleteSystemHandler = () => {
   const router = useRouter();
+
   const handleDeleteSystem = async (systemid) => {
-    const result = await deleteSystem(systemid);
-    if (result) {
-      showsAlert(
-        'success',
-        'System deleted successfully'
-      );
-      setTimeout(() => {
-        router.push('/dashboard/connection');
-      }, 2000);
-    } else {
-      showsAlert(
-        'error',
-        'Failed to delete system'
-      );
+    const result = await confirmDelete();
+
+    if (result.isConfirmed) {
+      const response = await deleteSystem(systemid);
+
+      if (response) {
+        await showDeleteSuccess();
+        router.push("/dashboard/connection");
+      } else {
+        await showAlert("error", "Error!", "Failed to delete system");
+      }
     }
   };
 
