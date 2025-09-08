@@ -1,54 +1,65 @@
-const axios = require('axios');
-const AppError = require('../utils/appError');
+const axios = require("axios");
+const AppError = require("../utils/appError");
 
-// Load configuration from environment variables
 const baseUrl = process.env.GUAC_BASE_URL;
 const guacUsername = process.env.GUAC_USERNAME;
 const guacPassword = process.env.GUAC_PASSWORD;
-const dataSource = process.env.DATA_SOURCE;
 
-// Validate essential configuration
-exports.guacLogin = async () => {
+// token caching
+let cachedToken = null;
+let tokenExpiry = null;
+
+/**
+ * Login to Guacamole and get auth token (with caching)
+ */
+async function guacLogin() {
+  // if token still valid, reuse
+  if (cachedToken && tokenExpiry && Date.now() < tokenExpiry) {
+    return cachedToken;
+  }
+
   try {
     const response = await axios.post(
       `${baseUrl}/tokens`,
       new URLSearchParams({
         username: guacUsername,
-        password: guacPassword
+        password: guacPassword,
       }),
-      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+      {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        timeout: 5000,
+      }
     );
 
-    return response.data.authToken;
-  } catch (err) {
-    throw new AppError('Failed to login to Guacamole API', 500);
-  }
-};
+    cachedToken = response.data.authToken;
+    // guacamole default TTL ≈ 60 min, set expiry 55 min
+    tokenExpiry = Date.now() + 55 * 60 * 1000;
 
-// Fetch all available Guacamole connections
-exports.getConnections = async () => {
+    return cachedToken;
+  } catch (err) {
+    throw new AppError("Failed to login to Guacamole API", 500);
+  }
+}
+
+/**
+ * Start Guacamole connection for a given system
+ * @param {Object} system - system object from OracleDB
+ * @returns {String} URL to embed in frontend
+ */
+async function startConnection(system) {
   try {
-    const token = await exports.guacLogin();
+    const authToken = await guacLogin();
 
-    const response = await axios.get(
-      `${baseUrl}/session/data/${dataSource}/connections`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+    // direct client URL, no Guac DB insert
+    const guacUrl = `${baseUrl}/#/client/${system.systemid}?token=${authToken}`;
 
-    return response.data;
+    return guacUrl;
   } catch (err) {
-    throw new AppError('Failed to fetch connections from Guacamole', 500);
+    throw new AppError("Failed to start Guacamole connection", 500);
   }
-};
+}
 
-// Generate a connection tunnel URL for a specific connection ID
-exports.getConnectionTunnel = async (connectionId) => {
-  try {
-    const token = await exports.guacLogin();
-
-    // Construct tunnel URL (Guacamole client view)
-    return `${baseUrl.replace('/api', '')}/#/client/${connectionId}?token=${token}`;
-  } catch (err) {
-    throw new AppError('Failed to generate connection tunnel', 500);
-  }
+module.exports = {
+  guacLogin,
+  startConnection,
 };

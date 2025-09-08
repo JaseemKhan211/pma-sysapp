@@ -18,6 +18,7 @@ const ipallowsRoutes = require('./routes/ipallowsRoutes');
 const ipRoutes = require('./routes/ipRoutes');
 const accessRoutes = require('./routes/accessRoutes');
 const systemRoutes = require('./routes/systemRoutes');
+const guacRoutes = require('./routes/guacRoutes');
 
 // Error handling middleware
 const globalErrorHandler = require('./controllers/errorController');
@@ -46,6 +47,7 @@ app.use('/api/v1/ipallows', ipallowsRoutes);
 app.use('/api/v1/ips', ipRoutes);
 app.use('/api/v1/access', accessRoutes);
 app.use('/api/v1/systems', systemRoutes);
+app.use('/api/v1/guac', guacRoutes);
 
 // catch unmatched routes
 app.all('/', (req, res, next) => {

@@ -7,6 +7,7 @@ import {
   useDeleteSystemHandler,
   useGetSystemHandler,
 } from "@/handlers/systemHandler";
+import { useConnectSystemHandler } from "@/handlers/guacHandler";
 
 import { Pencil, Trash2 } from "lucide-react";
 
@@ -14,6 +15,8 @@ export default function ConnectionReport() {
   const { handleGetAllSystems } = useGetAllSystemsHandler();
   const { handleDeleteSystem } = useDeleteSystemHandler();
   const { handleGetSystem } = useGetSystemHandler();
+  const { handleConnectSystem } = useConnectSystemHandler();
+
   const [connections, setConnections] = useState([]);
   const router = useRouter();
 
@@ -40,6 +43,14 @@ export default function ConnectionReport() {
     await handleDeleteSystem(systemid);
     setConnections((prev) => prev.filter((c) => c.systemid !== systemid));
   };
+
+  const handleConnect = async (systemid) => {
+    const result = await handleConnectSystem(systemid);
+    if (result?.guacUrl) {
+      window.open(result.guacUrl, "_blank"); 
+    }
+  };
+
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -71,6 +82,12 @@ export default function ConnectionReport() {
                 className="p-2 rounded-full hover:bg-red-100 text-red-600"
               >
                 <Trash2 size={18} />
+              </button>
+              <button
+                onClick={() => handleConnect(conn.systemid)} 
+                className="p-2 rounded-full hover:bg-green-100 text-green-600"
+              >
+                🔗
               </button>
             </div>
           </div>

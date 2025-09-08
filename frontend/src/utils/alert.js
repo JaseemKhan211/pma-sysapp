@@ -70,6 +70,15 @@ export const showDeleteSuccess = () => {
   );
 };
 
+// ERROR alert
+export const showError = (msg) => {
+  return Swal.fire({
+    icon: "error",
+    title: "Oops...",
+    text: "Something went wrong!" + (msg ? `: ${msg}` : ""),
+  });
+}
+
 // Function to hide any existing alert
 export const hideAlert = () => {
     const el = document.querySelector('.alert');
