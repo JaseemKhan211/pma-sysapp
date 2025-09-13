@@ -2,6 +2,7 @@ const axios = require("axios");
 const AppError = require("../utils/appError");
 
 const baseUrl = process.env.GUAC_BASE_URL;
+const apiUrl = `${baseUrl}/api`;
 const guacUsername = process.env.GUAC_USERNAME;
 const guacPassword = process.env.GUAC_PASSWORD;
 
@@ -20,7 +21,7 @@ async function guacLogin() {
 
   try {
     const response = await axios.post(
-      `${baseUrl}/tokens`,
+      `${apiUrl}/tokens`,
       new URLSearchParams({
         username: guacUsername,
         password: guacPassword,

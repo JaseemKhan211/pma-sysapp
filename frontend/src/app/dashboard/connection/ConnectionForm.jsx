@@ -21,9 +21,9 @@ export default function ConnectionForm() {
   const [hostname, setHostname] = useState("");
   const [ip_address, setIpAddress] = useState("");
   const [loc, setLoc] = useState("");
-  const [protocol, setProtocol] = useState("RDP");
-  const [port, setPort] = useState("3389");
-  const [tmeout, setTmeout] = useState("30");
+  const [protocol, setProtocol] = useState("");
+  const [port, setPort] = useState("");
+  const [tmeout, setTmeout] = useState("");
   const [username, setUsername] = useState("");
   const [pw, setPassword] = useState("");
   const [domainid, setDomain] = useState("");
@@ -43,9 +43,9 @@ export default function ConnectionForm() {
           setHostname((prev) => prev || sys[1] || "");
           setIpAddress((prev) => prev || sys[2] || "");
           setLoc((prev) => prev || sys[8] || "");
-          setProtocol((prev) => prev || sys[9] || "RDP");
-          setPort((prev) => prev || sys[10] || "3389");
-          setTmeout((prev) => prev || sys[11] || "30");
+          setProtocol((prev) => prev || sys[9] || "");
+          setPort((prev) => prev || sys[10] || "");
+          setTmeout((prev) => prev || sys[11] || "");
           setUsername((prev) => prev || sys[12] || "");
           setPassword((prev) => prev || sys[13] || "");
           setDomain((prev) => prev || sys[14] || "");
@@ -91,9 +91,9 @@ export default function ConnectionForm() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <InputField
-          label="Name"
+          label="Endpoint ID"
           name="systemid"
-          placeholder="Endpoint Name"
+          placeholder="Endpoint ID"
           value={systemid}
           onChange={(e) => setSystemid(e.target.value)}
           required
@@ -111,7 +111,24 @@ export default function ConnectionForm() {
           <select
             name="protocol"
             value={protocol}
-            onChange={(e) => setProtocol(e.target.value)}
+            onChange={(e) => {
+              const selectedProtocol = e.target.value;
+              setProtocol(selectedProtocol);
+
+              switch (selectedProtocol) {
+                case "RDP":
+                  setPort("3389");
+                  break;
+                case "SSH":
+                  setPort("22");
+                  break;
+                case "VNC":
+                  setPort("5900");
+                  break;
+                default:
+                  setPort("");
+              }
+            }}
             className="w-full px-3 py-2 border rounded-md border-gray-300"
           >
             <option value="RDP">RDP</option>
@@ -129,23 +146,24 @@ export default function ConnectionForm() {
           value={hostname}
           onChange={(e) => setHostname(e.target.value)}
         />
-        <InputField
+        {/* <InputField
           label="IP Address"
           name="ip_address"
           placeholder="e.g. 192.168.1.10"
           value={ip_address}
           onChange={(e) => setIpAddress(e.target.value)}
           required
-        />
+        /> */}
         <InputField
           label="Port"
           name="port"
           placeholder="Port"
           value={port}
           onChange={(e) => setPort(e.target.value)}
+          readOnly
         />
         <InputField
-          label="Connection Timeout"
+          label="Endpoint Timeout"
           name="tmeout"
           placeholder="Seconds"
           value={tmeout}
@@ -175,12 +193,24 @@ export default function ConnectionForm() {
         />
       </div>
 
-      <button
-        type="submit"
-        className="text-white px-4 py-2 rounded bg-blue-900 dark:bg-gray-900 hover:bg-blue-600 dark:hover:bg-gray-700"
-      >
-        {editSystemId ? "Update" : "Create"}
-      </button>
+      <div className="flex justify-between mt-6">
+        {/* 💡 Cancel Button */}
+        <button
+          type="button"
+          onClick={() => router.push("/dashboard/connection")}
+          className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md text-sm hover:bg-gray-300"
+        >
+          Cancel
+        </button>
+
+        {/* 💡 Submit Button */}
+        <button
+          type="submit"
+          className="bg-black text-white px-3 py-2 rounded-md text-sm"
+        >
+          {editSystemId ? "Update" : "Create"}
+        </button>
+      </div>
     </form>
   );
 }
