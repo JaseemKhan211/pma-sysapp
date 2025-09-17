@@ -3,15 +3,13 @@ const systemModel = require('./systemModel');
 // Map Oracle rows → object
 function mapSystemRow(row) {
   return {
-    id: row[0],
     systemid: row[7],
-    ip_address: row[2],
-    loc: row[8],
     hostname: row[1],
-    username: row[12],
     protocol: row[9],
     port: row[10],
+    loc: row[8],
     timeout: row[11],
+    username: row[12],
     pw: row[13],
     domainid: row[14],
   };

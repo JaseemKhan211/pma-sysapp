@@ -10,7 +10,7 @@ exports.connectSystem = catchAsync(async (req, res, next) => {
   const system = await guacModel.getSystemForGuac(systemid);
 
   // 1. Find: If no system is found with the provided ID
-  if (!system || system.length === 0) {
+  if (!system) {
     return next(new AppError('No system found with that ID', 404));
   }
 

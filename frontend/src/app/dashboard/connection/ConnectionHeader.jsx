@@ -11,7 +11,7 @@ export default function ConnectionHeader() {
           className="bg-black text-white px-3 py-2 rounded-md text-sm"
           onClick={() => router.push("/dashboard/connection/form")}
         >
-          🖥️➕ New Connection
+          🖥️➕ New Endpoint
         </button>
       </div>
 
