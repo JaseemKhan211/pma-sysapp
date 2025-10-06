@@ -14,14 +14,8 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Please provide user id and password.', 400));
   }
 
-  // ERROR FIND LOG 💥
-  // console.log('User from DB:', userRows); // User from DB: [ [ 'JK-01', '123@12' ] ]
-
   // Check if user exists and password is correct
   const user = userRows[0];
-
-  // ERROR FIND LOG 💥
-  // console.log('User found:', user); //  User found: [ 'JK-01', '123@12' ]
 
   // If no user is found or the password does not match
   if (!user || !(await correctPassword(pw, user[1]))) {
