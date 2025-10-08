@@ -12,9 +12,9 @@ export function middleware(request) {
   const isLoginRoute = pathname === '/login' || pathname === '/';
   const isProtectedRoute = pathname.startsWith('/dashboard');
 
-  // Redirect unauthenticated users from protected routes
+  // Redirect unauthenticated users from protected routes (dashboard, etc.)
   if (!isAuthenticated && isProtectedRoute) {
-    return NextResponse.redirect(new URL('/', request.url));
+    return NextResponse.redirect(new URL('/login', request.url)); 
   }
 
   // Redirect authenticated users away from the login page
