@@ -15,8 +15,8 @@ export const useLoginHandler = () => {
           'Logged in successfully.'
         );
         setTimeout(() => {
-          router.push('/home'); 
-        }, 1500);
+          router.push('/dashboard'); 
+        }, 1000);
       } else {
         showsAlert(
           'error',

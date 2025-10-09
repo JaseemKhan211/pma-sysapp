@@ -13,14 +13,14 @@ export function middleware(request) {
   const isProtectedRoute = pathname.startsWith('/dashboard');
 
   // Redirect unauthenticated users from protected routes (dashboard, etc.)
-  if (!isAuthenticated && isProtectedRoute) {
-    return NextResponse.redirect(new URL('/login', request.url)); 
-  }
+  // if (!isAuthenticated && isProtectedRoute) {
+  //   return NextResponse.redirect(new URL('/login', request.url)); 
+  // }
 
   // Redirect authenticated users away from the login page
-  if (isAuthenticated && isLoginRoute) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
-  }
+  // if (isAuthenticated && isLoginRoute) {
+  //   return NextResponse.redirect(new URL('/dashboard', request.url));
+  // }
 
   return NextResponse.next();
 }
